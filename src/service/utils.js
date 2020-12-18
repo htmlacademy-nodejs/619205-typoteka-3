@@ -17,3 +17,13 @@ module.exports.shuffle = (someArray) => {
 
   return someArray;
 };
+
+module.exports.getRandomDate = () => {
+  const start = new Date();
+  const end = new Date();
+  end.setMonth(end.getMonth() - 3);
+
+  return new Date(
+      start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+};
