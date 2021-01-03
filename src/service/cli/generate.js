@@ -1,6 +1,8 @@
 "use strict";
 
+const chalk = require(`chalk`);
 const fs = require(`fs`);
+
 const {getRandomInt, getRandomDate} = require(`../utils`);
 const {
   DEFAULT_COUNT,
@@ -25,7 +27,6 @@ const generateAds = (count) =>
 module.exports = {
   name: `--generate`,
   run(args) {
-    console.log(args);
     let [count] = args;
     count = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
@@ -33,10 +34,10 @@ module.exports = {
 
     fs.writeFile(FILE_NAME, content, (err) => {
       if (err) {
-        return console.error(`Can't write data to file...`);
+        return console.error(chalk.red(`Can't write data to file...`));
       }
 
-      return console.info(`Operation success. File created.`);
+      return console.info(chalk.green(`Operation success. File created.`));
     });
   },
 };
