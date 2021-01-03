@@ -27,7 +27,7 @@ const generateAds = (count) =>
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  run: async (args) => {
     let [count] = args;
     count = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
@@ -35,7 +35,7 @@ module.exports = {
     const writeFile = util.promisify(fs.writeFile);
 
     try {
-      writeFile(FILE_NAME, content);
+      await writeFile(FILE_NAME, content);
 
       return console.info(chalk.green(`Operation success. File created.`));
     } catch (err) {
