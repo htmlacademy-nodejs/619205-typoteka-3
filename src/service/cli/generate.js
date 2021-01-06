@@ -39,7 +39,11 @@ const generateAds = (count, sentences, titles, categories) =>
 module.exports = {
   name: `--generate`,
   run: async (args) => {
-    const rawMocks = await Promise.all([readContent(FILE_SENTENCES_PATH), readContent(FILE_TITLES_PATH), readContent(FILE_CATEGORIES_PATH)]);
+    const rawMocks = await Promise.all([
+      readContent(FILE_SENTENCES_PATH),
+      readContent(FILE_TITLES_PATH),
+      readContent(FILE_CATEGORIES_PATH)
+    ]);
 
     let [count] = args;
     count = Number.parseInt(count, 10) || DEFAULT_COUNT;
