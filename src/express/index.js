@@ -6,7 +6,7 @@ const express = require(`express`);
 const app = express();
 
 const indexRoutes = require(`./routes`);
-const registerRouter = require(`./routes/register`);
+const registerRoutes = require(`./routes/register`);
 const loginRoutes = require(`./routes/login`);
 const searchRoutes = require(`./routes/search`);
 const myRoutes = require(`./routes/my`);
@@ -15,7 +15,7 @@ const categoriesRoutes = require(`./routes/categories`);
 
 app
     .use(indexRoutes)
-    .use(`/register`, registerRouter)
+    .use(`/register`, registerRoutes)
     .use(`/login`, loginRoutes)
     .use(`/search`, searchRoutes)
     .use(`/my`, myRoutes)
