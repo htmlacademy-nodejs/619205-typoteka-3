@@ -4,7 +4,8 @@ const {Router} = require(`express`);
 const registerRouter = new Router();
 
 registerRouter.get(`/`, (request, response) => {
-  response.send(`/register`);
+  // TODO: позже выделить в собственную часть регистрации
+  response.render(`login`);
 });
 
 module.exports = registerRouter;
