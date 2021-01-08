@@ -2,7 +2,6 @@
 
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
-const util = require(`util`);
 
 const {ENCODING} = require(`../constants`);
 const {getRandomInt, getRandomDate} = require(`../utils`);

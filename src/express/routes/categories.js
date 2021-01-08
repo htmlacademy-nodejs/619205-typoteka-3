@@ -4,7 +4,7 @@ const {Router} = require(`express`);
 const categoriesRouter = new Router();
 
 categoriesRouter.get(`/`, (request, response) => {
-  response.send(`/categories`);
+  response.render(`all-categories`);
 });
 
 module.exports = categoriesRouter;

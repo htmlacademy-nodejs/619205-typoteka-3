@@ -2,6 +2,9 @@
 
 const PORT = 8080;
 
+const path = require(`path`);
+console.log(path.join(__dirname, `./public`));
+
 const express = require(`express`);
 const app = express();
 
@@ -13,7 +16,13 @@ const myRoutes = require(`./routes/my`);
 const articlesRoutes = require(`./routes/articles`);
 const categoriesRoutes = require(`./routes/categories`);
 
+
 app
+
+    .set(`views`, path.join(__dirname, `views`))
+    .set(`view engine`, `pug`)
+    .use(express.static(path.join(__dirname, `public`)))
+    .use(express.json())
     .use(indexRoutes)
     .use(`/register`, registerRoutes)
     .use(`/login`, loginRoutes)
@@ -21,5 +30,4 @@ app
     .use(`/my`, myRoutes)
     .use(`/articles`, articlesRoutes)
     .use(`/categories`, categoriesRoutes)
-    .use(express.json())
     .listen(PORT);
