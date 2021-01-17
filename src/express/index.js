@@ -3,7 +3,6 @@
 const PORT = 8080;
 
 const path = require(`path`);
-console.log(path.join(__dirname, `./public`));
 
 const express = require(`express`);
 const app = express();
