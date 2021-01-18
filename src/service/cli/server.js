@@ -1,65 +1,46 @@
 "use strict";
 
-const http = require(`http`);
+const express = require(`express`);
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 
-const {DEFAULT_PORT, HttpCode} = require(`../constants`);
+const {DEFAULT_PORT} = require(`../constants`);
 const {FILE_NAME} = require(`../mocks`);
+const {Router} = express;
 
-const notFoundMessageText = `Not found`;
+const onPostsReceiving = async (request, response) => {
+  let mocks = [];
 
-const sendResponse = (response, statusCode, message) => {
-  const template = `
-    <!Doctype html>
-      <html lang="ru">
-      <head>
-        <title>With love from Node</title>
-      </head>
-      <body>${message}</body>
-    </html>`.trim();
-
-  response.statusCode = statusCode;
-  response.writeHead(statusCode, {
-    'Content-Type': `text/html; charset=UTF-8`,
-  });
-
-  response.end(template);
-};
-
-const onClientConnect = async ({url}, response) => {
-  switch (url) {
-    case `/`:
-      try {
-        const fileContent = await fs.readFile(FILE_NAME);
-        const mocks = JSON.parse(fileContent);
-        const message = mocks.map(({title}) => `<li>${title}</li>`).join(``);
-        sendResponse(response, HttpCode.OK, `<ul>${message}</ul>`);
-      } catch (err) {
-        sendResponse(response, HttpCode.NOT_FOUND, notFoundMessageText);
-      }
-
-      break;
-    default:
-      sendResponse(response, HttpCode.NOT_FOUND, notFoundMessageText);
-      break;
+  try {
+    const fileContent = await fs.readFile(FILE_NAME);
+    mocks = JSON.parse(fileContent);
+  } catch (err) {
+    console.error(chalk.red(err));
   }
+
+  response.send(mocks);
 };
+
+const router = new Router();
+router.get(`/posts`, onPostsReceiving);
 
 module.exports = {
   name: `--server`,
   run(args) {
+    const app = express();
+
     const [customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
 
-    http.createServer(onClientConnect)
-    .listen(port)
-    .on(`listening`, (err) => {
+    app
+    .use(router)
+    .use(express.json())
+    .listen(port, (err) => {
       if (err) {
-        return console.error(chalk.red(`Ошибка при создании сервера`, err));
+        console.error(chalk.red(`Ошибка при создании сервера`, err));
       }
 
-      return console.info(chalk.green(`Ожидаю соединений на ${port}`));
+      console.info(chalk.green(`Ожидаю соединений на ${port}`));
     });
   },
 };
