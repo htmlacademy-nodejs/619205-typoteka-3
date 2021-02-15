@@ -7,6 +7,7 @@ module.exports.DEFAULT_COMMAND = `--help`;
 module.exports.ExitCode = {
   SUCCESS: 0
 };
+module.exports.API_PREFIX = `/api`;
 module.exports.HttpCode = {
   OK: 200,
   NOT_FOUND: 404,

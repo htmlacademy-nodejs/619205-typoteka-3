@@ -2,15 +2,18 @@
 
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
-
+const {nanoid} = require(`nanoid`);
 const {ENCODING} = require(`../constants`);
-const {getRandomInt, getRandomDate} = require(`../utils`);
+const {getRandomInt, getRandomDate, shuffle} = require(`../utils`);
 const {
   DEFAULT_COUNT,
+  MAX_ID_LENGTH,
+  MAX_COMMENTS,
   FILE_NAME,
   FILE_SENTENCES_PATH,
   FILE_TITLES_PATH,
   FILE_CATEGORIES_PATH,
+  FILE_COMMENTS_PATH
 } = require(`../mocks`);
 
 const readContent = async (filePath) => {
@@ -23,16 +26,27 @@ const readContent = async (filePath) => {
   }
 };
 
-const generateAds = (count, sentences, titles, categories) =>
+const generateComments = (count, comments) => (
+  Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_ID_LENGTH),
+    text: shuffle(comments)
+      .slice(0, getRandomInt(1, 3))
+      .join(` `),
+  }))
+);
+
+const generateAds = (count, sentences, titles, categories, comments) =>
   Array(count)
     .fill({})
     .map(() => ({
+      id: nanoid(MAX_ID_LENGTH),
       title: titles[getRandomInt(0, titles.length)],
       createdDate: getRandomDate(),
       // Временно. Потом сделаю полноценную генерацию моков
       announce: sentences[getRandomInt(0, sentences.length)],
       fullText: sentences[0] + sentences[1],
       сategory: categories,
+      comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
     }));
 
 module.exports = {
@@ -41,7 +55,8 @@ module.exports = {
     const rawMocks = await Promise.all([
       readContent(FILE_SENTENCES_PATH),
       readContent(FILE_TITLES_PATH),
-      readContent(FILE_CATEGORIES_PATH)
+      readContent(FILE_CATEGORIES_PATH),
+      readContent(FILE_COMMENTS_PATH)
     ]);
 
     let [count] = args;
