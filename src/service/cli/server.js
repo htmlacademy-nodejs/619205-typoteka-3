@@ -1,28 +1,14 @@
 "use strict";
 
 const express = require(`express`);
-const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 
-const {DEFAULT_PORT} = require(`../constants`);
-const {FILE_NAME} = require(`../mocks`);
+const {DEFAULT_PORT, API_PREFIX} = require(`../constants`);
 const {Router} = express;
+const routes = require(`../api`);
 
-const onPostsReceiving = async (request, response) => {
-  let mocks = [];
-
-  try {
-    const fileContent = await fs.readFile(FILE_NAME);
-    mocks = JSON.parse(fileContent);
-  } catch (err) {
-    console.error(chalk.red(err));
-  }
-
-  response.send(mocks);
-};
 
 const router = new Router();
-router.get(`/posts`, onPostsReceiving);
 
 module.exports = {
   name: `--server`,
@@ -35,6 +21,7 @@ module.exports = {
     app
     .use(router)
     .use(express.json())
+    .use(API_PREFIX, routes)
     .listen(port, (err) => {
       if (err) {
         console.error(chalk.red(`Ошибка при создании сервера`, err));
